@@ -40,6 +40,52 @@ fn records(vcf: &[u8]) -> Vec<String> {
         .collect()
 }
 
+fn golden_records(name: &str) -> Vec<String> {
+    let bytes = std::fs::read(fixtures_dir().join(name)).unwrap();
+    records(&bytes)
+}
+
+/// Always-on CI gate: ours vs a committed `bcftools concat` snapshot, so the
+/// differential runs even where the oracle is absent.
+#[test]
+fn concat_matches_committed_upstream() {
+    let dir = fixtures_dir();
+    let out = ours()
+        .arg(dir.join("chr1.vcf"))
+        .arg(dir.join("chr2.vcf"))
+        .arg(dir.join("chr3.vcf"))
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "rsomics-vcf-concat failed: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert_eq!(
+        records(&out.stdout),
+        golden_records("concat.upstream.expected")
+    );
+}
+
+#[test]
+fn concat_two_files_matches_committed_upstream() {
+    let dir = fixtures_dir();
+    let out = ours()
+        .arg(dir.join("chr1.vcf"))
+        .arg(dir.join("chr2.vcf"))
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "rsomics-vcf-concat failed: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert_eq!(
+        records(&out.stdout),
+        golden_records("concat-two.upstream.expected")
+    );
+}
+
 /// Concatenation order and data records must match `bcftools concat` on the golden fixtures.
 ///
 /// bcftools concat stamps extra header lines; comparison is on data records only.

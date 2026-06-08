@@ -1,0 +1,8 @@
+chr1	100	.	A	T	50	PASS	.	GT	0/1	0/0
+chr1	200	rs123	G	C	80	PASS	.	GT	1/1	0/1
+chr1	350	.	T	A	30	PASS	.	GT	0/0	0/1
+chr2	500	.	C	G	60	PASS	.	GT	0/1	1/1
+chr2	750	rs456	A	T	90	PASS	.	GT	1/0	0/1
+chr3	1000	.	G	A	70	PASS	.	GT	0/0	1/1
+chr3	2000	rs789	T	C	45	PASS	.	GT	0/1	0/0
+chr3	3000	.	C	T	55	PASS	.	GT	1/1	0/1
